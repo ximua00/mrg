@@ -113,7 +113,7 @@ class Model:
 
   def _attention_layer(self, h, features, features_proj):
     with tf.variable_scope('attention'):
-      L = get_shape(features)[1]
+      L = get_shape(features)[1] 
 
       w = tf.get_variable('w', [self.C, self.D], initializer=self.weight_initializer)
       b = tf.get_variable('b', [self.D], initializer=self.const_initializer)
@@ -133,7 +133,8 @@ class Model:
       w_h = tf.get_variable('w_h', [self.C, 1], initializer=self.weight_initializer)
       b = tf.get_variable('b', [1], initializer=self.const_initializer)
       beta = tf.nn.sigmoid(tf.matmul(x, w_x) + tf.matmul(h, w_h) + b)  # (N, 1)
-      weighted_features = tf.multiply(beta, s_features) + tf.multiply((1. - beta), v_features)
+      weighted_features = tf.multiply(beta, s_features) + tf.multiply((1. - beta), v_features) #CHANNGEEEEEE
+      # weighted_features = s_features #ignore visual features
       return weighted_features, beta
 
   def _init_lstm(self):
@@ -188,7 +189,7 @@ class Model:
         x = reviews_emb[:, t, :]
 
         visual_context, alpha = self._attention_layer(h, self.visual_features, self.visual_projection)
-        context, beta = self._fusion_gate(x, h, self.sentiment_features, visual_context)
+        context, beta = self._fusion_gate(x, h, self.sentiment_features, visual_context) 
 
         cell_input = tf.concat([x, context], axis=1)
         _, (c, h) = self.cell(inputs=cell_input, state=[c, h])
@@ -215,7 +216,7 @@ class Model:
 
         visual_context, alpha = self._attention_layer(h, self.visual_features, self.visual_projection)
         alpha_list.append(alpha)
-        context, beta = self._fusion_gate(x, h, self.sentiment_features, visual_context)
+        context, beta = self._fusion_gate(x, h, self.sentiment_features, visual_context) #CHANNGEEE 
         beta_list.append(beta)
 
         cell_input = tf.concat([x, context], axis=1)
